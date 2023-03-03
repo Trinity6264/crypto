@@ -1,0 +1,27 @@
+import 'package:bloc/bloc.dart';
+import 'package:equatable/equatable.dart';
+
+part 'keypad_state.dart';
+
+class KeypadCubit extends Cubit<KeypadState> {
+  KeypadCubit() : super(KeypadInitial());
+
+  String inputs = '';
+
+  void getUserInput({required String input}) {
+    inputs += input;
+    emit(KeypadTyping(input: inputs));
+  }
+
+  void deleteUserInput() {
+    if (inputs.isEmpty) {
+      emit(KeypadInitial());
+      return;
+    }
+    final rem = inputs.split('');
+    rem.removeAt(rem.length - 1);
+    inputs = rem.join('');
+
+    emit(KeypadTyping(input: inputs));
+  }
+}

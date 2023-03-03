@@ -3,6 +3,7 @@ import 'package:crypto/app/service_locator.dart';
 import 'package:crypto/helper/color_pallet.dart';
 import 'package:crypto/logic/cubit/country/country_cubit.dart';
 import 'package:crypto/logic/cubit/currency/currency_cubit.dart';
+import 'package:crypto/logic/cubit/keypad/keypad_cubit.dart';
 import 'package:crypto/service/nav_service.dart';
 import 'package:crypto/widgets/card_wrapper.dart';
 import 'package:crypto/widgets/choose_token.dart';
@@ -25,8 +26,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-
-
   Future<void> getCountries() async {
     final apiService = context.read<CountryCubit>();
     await apiService.getCryptoCountry();
@@ -83,7 +82,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                 child: Row(
                                   children: [
                                     const CircleAvatar(
-                                      backgroundColor: ColorPallet.primaryColor,
+                                      backgroundColor: ColorPallet.darkColor,
+                                      backgroundImage: NetworkImage(
+                                        'https://images.unsplash.com/photo-1667808930615-b6cf6a7c0af5?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80',
+                                      ),
                                     ),
                                     const SizedBox(width: 7),
                                     Column(
@@ -138,13 +140,27 @@ class _HomeScreenState extends State<HomeScreen> {
                       const CryptoTypeDisplay(),
                       SizedBox(height: size.height * .02),
                       Center(
-                        child: Text(
-                          '\$0',
-                          style: TextStyle(
-                            color: ColorPallet.textColor,
-                            fontSize: size.width * .15,
-                            fontWeight: FontWeight.w700,
-                          ),
+                        child: BlocBuilder<KeypadCubit, KeypadState>(
+                          builder: (context, state) {
+                            if (state is KeypadTyping) {
+                              return Text(
+                                '\$${state.input}',
+                                style: TextStyle(
+                                  color: ColorPallet.textColor,
+                                  fontSize: size.width * .15,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              );
+                            }
+                            return Text(
+                              '\$0',
+                              style: TextStyle(
+                                color: ColorPallet.textColor,
+                                fontSize: size.width * .15,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            );
+                          },
                         ),
                       ),
                       SizedBox(height: size.height * .01),
