@@ -32,14 +32,14 @@ class _HomeScreenState extends State<HomeScreen> {
     await apiService.getCryptoCountry();
   }
 
-  Future<void> getData() async {
+  Future<void> getCrypto() async {
     await context.read<CurrencyCubit>().getCryptoCurrency();
   }
 
   @override
   void initState() {
     getCountries();
-    getData();
+    getCrypto();
     super.initState();
   }
 
