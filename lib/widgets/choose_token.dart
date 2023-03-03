@@ -1,5 +1,5 @@
 import 'package:crypto/helper/color_pallet.dart';
-import 'package:crypto/logic/cubit/cubit/currency_cubit.dart';
+import 'package:crypto/logic/cubit/currency/currency_cubit.dart';
 import 'package:crypto/widgets/card_wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

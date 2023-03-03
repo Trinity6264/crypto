@@ -1,9 +1,7 @@
-import 'dart:developer';
-
 import 'package:crypto/app/app_router.dart';
 import 'package:crypto/app/service_locator.dart';
 import 'package:crypto/helper/color_pallet.dart';
-import 'package:crypto/logic/cubit/cubit/currency_cubit.dart';
+import 'package:crypto/logic/cubit/country/country_cubit.dart';
 import 'package:crypto/service/nav_service.dart';
 import 'package:crypto/widgets/card_wrapper.dart';
 import 'package:crypto/widgets/choose_token.dart';
@@ -13,11 +11,15 @@ import 'package:crypto/widgets/payment_method.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
   static final _navService = locator.get<NavigationServices>();
+}
 
+class _HomeScreenState extends State<HomeScreen> {
   // requesting for model sheet
   void requestModelSheet(BuildContext context, Widget child) {
     showModalBottomSheet(
@@ -26,6 +28,17 @@ class HomeScreen extends StatelessWidget {
         builder: (context) {
           return child;
         });
+  }
+
+  void getCountries() async {
+    final apiService = context.read<CountryCubit>();
+    await apiService.getCryptoCountry();
+  }
+
+  @override
+  void initState() {
+    getCountries();
+    super.initState();
   }
 
   @override
@@ -103,9 +116,64 @@ class HomeScreen extends StatelessWidget {
                           ),
                           const SizedBox(width: 20),
                           SizedBox(
-                            width: size.width * .2,
+                            width: size.width * .3,
                             height: double.infinity,
-                            child: const CardWrapper(child: Text('data')),
+                            child: BlocBuilder<CountryCubit, CountryState>(
+                              builder: (context, state) {
+                                if (state is CountryLoading) {
+                                  return const CardWrapper(
+                                    child: SizedBox(),
+                                  );
+                                }
+                                if (state is CountryFailed) {
+                                  return CardWrapper(
+                                    child: Text(
+                                      state.errorMessage,
+                                      style: const TextStyle(
+                                        color: ColorPallet.whiteColor,
+                                      ),
+                                    ),
+                                  );
+                                }
+                                if (state is CountrySuccess) {
+                                  return Container(
+                                    width: 10,
+                                    height: double.infinity,
+                                    // padding: const EdgeInsets.all(8),
+                                    decoration: BoxDecoration(
+                                      color: ColorPallet.lightGrayColor,
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: Expanded(
+                                      child: DropdownButtonFormField(
+                                        onChanged: (value) {},
+                                        decoration: const InputDecoration(
+                                          border: InputBorder.none,
+                                        ),
+                                        dropdownColor: ColorPallet.darkColor,
+                                        items: state.countries
+                                            .map(
+                                              (e) => DropdownMenuItem(
+                                                value: e.name,
+                                                child: Text(
+                                                  e.name ?? '-',
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  style: const TextStyle(
+                                                    color:
+                                                        ColorPallet.whiteColor,
+                                                  ),
+                                                ),
+                                              ),
+                                            )
+                                            .toList(),
+                                      ),
+                                    ),
+                                  );
+                                }
+                                return const SizedBox();
+                              },
+                            ),
                           ),
                         ],
                       ),
@@ -113,7 +181,6 @@ class HomeScreen extends StatelessWidget {
                     SizedBox(height: size.height * .03),
                     GestureDetector(
                       onTap: () {
-                        
                         requestModelSheet(context, const ChooseToken());
                       },
                       child: SizedBox(
@@ -216,7 +283,8 @@ class HomeScreen extends StatelessWidget {
                       child: CustomButton(
                           text: 'Get quotes',
                           onPressed: () {
-                            _navService.pushNamed(AppRouter.selectQuoteScreen);
+                            HomeScreen._navService
+                                .pushNamed(AppRouter.selectQuoteScreen);
                           }),
                     ),
                   ],
