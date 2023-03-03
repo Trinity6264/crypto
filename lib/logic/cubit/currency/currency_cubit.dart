@@ -22,10 +22,10 @@ class CurrencyCubit extends Cubit<CurrencyState> {
         emit(CurrencySuccess(currencies: res));
         return;
       }
-    } on SocketException catch (e) {
+    } on SocketException catch (_) {
       emit(const CurrencyFailed(
           errorMessage: 'Connection error,check your internet connection '));
-    } on TimeoutException catch (e) {
+    } on TimeoutException catch (_) {
       emit(const CurrencyFailed(
           errorMessage: 'Timeout,check your internet connection '));
     } on HandshakeException catch (e) {

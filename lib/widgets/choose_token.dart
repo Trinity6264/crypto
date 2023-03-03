@@ -4,23 +4,8 @@ import 'package:crypto/widgets/card_wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class ChooseToken extends StatefulWidget {
+class ChooseToken extends StatelessWidget {
   const ChooseToken({super.key});
-
-  @override
-  State<ChooseToken> createState() => _ChooseTokenState();
-}
-
-class _ChooseTokenState extends State<ChooseToken> {
-  @override
-  void initState() {
-    getData();
-    super.initState();
-  }
-
-  Future<void> getData() async {
-    await context.read<CurrencyCubit>().getCryptoCurrency();
-  }
 
   @override
   Widget build(BuildContext context) {
