@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:crypto/app/app_router.dart';
 import 'package:crypto/app/service_locator.dart';
 import 'package:crypto/helper/color_pallet.dart';
+import 'package:crypto/logic/cubit/cubit/currency_cubit.dart';
 import 'package:crypto/service/nav_service.dart';
 import 'package:crypto/widgets/card_wrapper.dart';
 import 'package:crypto/widgets/choose_token.dart';
@@ -10,6 +11,7 @@ import 'package:crypto/widgets/custom_button.dart';
 import 'package:crypto/widgets/custom_text_button.dart';
 import 'package:crypto/widgets/payment_method.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -110,8 +112,10 @@ class HomeScreen extends StatelessWidget {
                     ),
                     SizedBox(height: size.height * .03),
                     GestureDetector(
-                      onTap: () =>
-                          requestModelSheet(context, const ChooseToken()),
+                      onTap: () {
+                        
+                        requestModelSheet(context, const ChooseToken());
+                      },
                       child: SizedBox(
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,

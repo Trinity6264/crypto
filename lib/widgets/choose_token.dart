@@ -1,9 +1,26 @@
 import 'package:crypto/helper/color_pallet.dart';
+import 'package:crypto/logic/cubit/cubit/currency_cubit.dart';
 import 'package:crypto/widgets/card_wrapper.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-class ChooseToken extends StatelessWidget {
+class ChooseToken extends StatefulWidget {
   const ChooseToken({super.key});
+
+  @override
+  State<ChooseToken> createState() => _ChooseTokenState();
+}
+
+class _ChooseTokenState extends State<ChooseToken> {
+  @override
+  void initState() {
+    getData();
+    super.initState();
+  }
+
+  Future<void> getData() async {
+    await context.read<CurrencyCubit>().getCryptoCurrency();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -86,40 +103,71 @@ class ChooseToken extends StatelessWidget {
           ),
           SizedBox(height: size.height * .02),
           Expanded(
-            child: ListView.builder(
-              itemCount: 10,
-              itemBuilder: (context, index) {
-                return ListTile(
-                  leading: const CircleAvatar(
-                    backgroundColor: ColorPallet.primaryColor,
-                    radius: 20,
-                  ),
-                  title: const Text(
-                    'Ether',
-                    style: TextStyle(
-                      color: ColorPallet.whiteColor,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  subtitle: const Text(
-                    'ETH',
-                    style: TextStyle(
-                      color: ColorPallet.textColor,
-                    ),
-                  ),
-                  trailing: SizedBox(
-                    width: size.width * .2,
-                    height: size.height * .05,
-                    child: const CardWrapper(
-                      child: Text(
-                        'Ethereum',
-                        style: TextStyle(
-                          color: ColorPallet.textColor,
+            child: BlocBuilder<CurrencyCubit, CurrencyState>(
+              builder: (context, state) {
+                if (state is CurrencyLoading) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+                if (state is CurrencyFailed) {
+                  return Center(
+                    child: TextButton.icon(
+                      onPressed: () {},
+                      icon: const Icon(
+                        Icons.restart_alt_rounded,
+                        color: ColorPallet.textColor,
+                      ),
+                      label: Text(
+                        state.errorMessage,
+                        style: const TextStyle(
+                          color: ColorPallet.whiteColor,
                         ),
                       ),
                     ),
-                  ),
-                );
+                  );
+                }
+                if (state is CurrencySuccess) {
+                  return ListView.builder(
+                    itemCount: state.currencies.length,
+                    itemBuilder: (context, index) {
+                      final currencyData = state.currencies[index];
+                      return ListTile(
+                        leading: CircleAvatar(
+                          backgroundColor: ColorPallet.lightGrayColor,
+                          backgroundImage:
+                              NetworkImage(currencyData.image!.small!),
+                          radius: 20,
+                        ),
+                        title: Text(
+                          currencyData.name ?? '',
+                          style: const TextStyle(
+                            color: ColorPallet.whiteColor,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        subtitle: Text(
+                          currencyData.symbol ?? '',
+                          style: const TextStyle(
+                            color: ColorPallet.textColor,
+                          ),
+                        ),
+                        trailing: SizedBox(
+                          width: size.width * .23,
+                          height: size.height * .05,
+                          child: CardWrapper(
+                            child: Text(
+                              currencyData.name ?? '-',
+                              overflow: TextOverflow.fade,
+                              style: const TextStyle(
+                                color: ColorPallet.textColor,
+                              ),
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                }
+                return const SizedBox();
               },
             ),
           ),
