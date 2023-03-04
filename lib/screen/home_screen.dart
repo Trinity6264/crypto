@@ -4,18 +4,18 @@ import 'package:crypto/helper/color_pallet.dart';
 import 'package:crypto/logic/cubit/country/country_cubit.dart';
 import 'package:crypto/logic/cubit/currency/currency_cubit.dart';
 import 'package:crypto/logic/cubit/keypad/keypad_cubit.dart';
+import 'package:crypto/logic/cubit/paymentmethod/paymentmethod_cubit.dart';
 import 'package:crypto/service/nav_service.dart';
 import 'package:crypto/widgets/card_wrapper.dart';
-import 'package:crypto/widgets/choose_token.dart';
 import 'package:crypto/widgets/crypto_type_display.dart';
 import 'package:crypto/widgets/custom_button.dart';
 import 'package:crypto/widgets/custom_dropdown.dart';
-import 'package:crypto/widgets/custom_text_button.dart';
 import 'package:crypto/widgets/keypad_wrapper.dart';
 import 'package:crypto/widgets/modal_sheet.dart';
 import 'package:crypto/widgets/payment_method.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -26,19 +26,23 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  Future<void> getCountries() async {
-    final apiService = context.read<CountryCubit>();
-    await apiService.getCryptoCountry();
-  }
+  // Future<void> getCountries() async {
+  //   final apiService = context.read<CountryCubit>();
+  //   await apiService.getCryptoCountry();
+  // }
 
   Future<void> getCrypto() async {
     await context.read<CurrencyCubit>().getCryptoCurrency();
   }
 
+  Future<void> getPaymentMethod() async {
+    await context.read<PaymentMethodCubit>().getPaymentMethod();
+  }
+
   @override
   void initState() {
-    getCountries();
     getCrypto();
+    getPaymentMethod();
     super.initState();
   }
 
@@ -125,8 +129,9 @@ class _HomeScreenState extends State<HomeScreen> {
                             const SizedBox(width: 10),
                             Container(
                               height: double.infinity,
-                              width: size.width * .4,
-                              padding: const EdgeInsets.all(5),
+                              width: size.width * .2,
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 5, horizontal: 10),
                               decoration: BoxDecoration(
                                 color: ColorPallet.lightGrayColor,
                                 borderRadius: BorderRadius.circular(10),
@@ -178,46 +183,82 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ),
                       SizedBox(height: size.height * .01),
-                      GestureDetector(
-                        onTap: () {
-                          requestModelSheet(context, const PaymentMethod());
-                        },
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 25),
-                          width: double.infinity,
-                          height: size.height * .08,
-                          child: CardWrapper(
-                            child: Row(
-                              children: [
-                                Container(
-                                  width: size.width * .08,
-                                  height: size.height * .04,
-                                  alignment: Alignment.center,
-                                  decoration: BoxDecoration(
-                                    color: ColorPallet.darkColor,
-                                    borderRadius: BorderRadius.circular(5),
-                                  ),
-                                  child: const Text('🏦'),
-                                ),
-                                const SizedBox(width: 8),
-                                Text(
-                                  'UPI',
-                                  style: TextStyle(
-                                    color: ColorPallet.textColor,
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: size.width * .06,
-                                  ),
-                                ),
-                                const Spacer(),
-                                Icon(
-                                  Icons.arrow_forward_ios_rounded,
+                      BlocBuilder<PaymentMethodCubit, PaymentMethodState>(
+                        builder: (context, state) {
+                          if (state is PaymentMethodLoading) {
+                            return const Center(
+                                child: CircularProgressIndicator());
+                          }
+                          if (state is PaymentMethodFailure) {
+                            return Center(
+                              child: TextButton.icon(
+                                onPressed: () {},
+                                icon: const Icon(
+                                  Icons.refresh_rounded,
                                   color: ColorPallet.textColor,
-                                  size: size.width * .04,
                                 ),
-                              ],
-                            ),
-                          ),
-                        ),
+                                label: Text(
+                                  state.errorMessage,
+                                  style: const TextStyle(
+                                      color: ColorPallet.whiteColor),
+                                ),
+                              ),
+                            );
+                          }
+                          if (state is PaymentMethodSuccess) {
+                            return GestureDetector(
+                              onTap: () {
+                                requestModelSheet(
+                                    context, const PaymentMethod());
+                              },
+                              child: Container(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 25),
+                                width: double.infinity,
+                                height: size.height * .08,
+                                child: CardWrapper(
+                                  child: Row(
+                                    children: [
+                                      Container(
+                                          width: size.width * .08,
+                                          height: size.height * .04,
+                                          alignment: Alignment.center,
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(5),
+                                          ),
+                                          child: SvgPicture.network(
+                                            state.data[0].paymentOptions![0]
+                                                .icon!,
+                                            semanticsLabel: 'Logo',
+                                            placeholderBuilder: (context) =>
+                                                const Center(
+                                                    child:
+                                                        CircularProgressIndicator()),
+                                          )),
+                                      const SizedBox(width: 8),
+                                      Text(
+                                        state.data[0].symbol ?? '-',
+                                        style: TextStyle(
+                                          color: ColorPallet.textColor,
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: size.width * .06,
+                                        ),
+                                      ),
+                                      const Spacer(),
+                                      Icon(
+                                        Icons.arrow_forward_ios_rounded,
+                                        color: ColorPallet.textColor,
+                                        size: size.width * .04,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            );
+                          }
+                          return const SizedBox();
+                        },
                       ),
                       SizedBox(height: size.height * .03),
                       Container(

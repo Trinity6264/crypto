@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:bloc/bloc.dart';
@@ -28,14 +27,12 @@ class CurrencyCubit extends Cubit<CurrencyState> {
     } on TimeoutException catch (_) {
       emit(const CurrencyFailed(
           errorMessage: 'Timeout,check your internet connection '));
-    } on HandshakeException catch (e) {
-      log(e.toString());
       emit(
         const CurrencyFailed(
             errorMessage: 'Something happened, Sorry try again 🥳'),
       );
     } catch (e) {
-      log(e.runtimeType.toString());
+      
       emit(
         const CurrencyFailed(
             errorMessage: 'Something happened, Sorry try again 🥳'),

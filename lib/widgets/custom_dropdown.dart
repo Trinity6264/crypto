@@ -1,22 +1,24 @@
 import 'package:crypto/helper/color_pallet.dart';
 import 'package:crypto/logic/cubit/country/country_cubit.dart';
+import 'package:crypto/logic/cubit/paymentmethod/paymentmethod_cubit.dart';
 import 'package:crypto/widgets/card_wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class CustomDropDown extends StatelessWidget {
   const CustomDropDown({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<CountryCubit, CountryState>(
+    return BlocBuilder<PaymentMethodCubit, PaymentMethodState>(
       builder: (context, state) {
-        if (state is CountryLoading) {
+        if (state is PaymentMethodLoading) {
           return const CardWrapper(
             child: SizedBox(),
           );
         }
-        if (state is CountryFailed) {
+        if (state is PaymentMethodFailure) {
           return CardWrapper(
             child: Text(
               state.errorMessage,
@@ -26,7 +28,7 @@ class CustomDropDown extends StatelessWidget {
             ),
           );
         }
-        if (state is CountrySuccess) {
+        if (state is PaymentMethodSuccess) {
           return DropdownButtonFormField(
             isExpanded: true,
             onChanged: (value) {},
@@ -40,16 +42,14 @@ class CustomDropDown extends StatelessWidget {
                 color: ColorPallet.textColor,
               ),
             ),
-            items: state.countries
+            items: state.data
                 .map(
                   (e) => DropdownMenuItem(
                     value: e.name,
-                    child: Text(
-                      e.name ?? '-',
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        color: ColorPallet.whiteColor,
-                      ),
+                    child: SizedBox(
+                      height: 20,
+                      width: 20,
+                      child: SvgPicture.string(e.icon!),
                     ),
                   ),
                 )

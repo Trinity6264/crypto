@@ -1,6 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:crypto/logic/cubit/country/country_cubit.dart';
 import 'package:crypto/logic/cubit/keypad/keypad_cubit.dart';
+import 'package:crypto/logic/cubit/paymentmethod/paymentmethod_cubit.dart';
 import 'package:crypto/repository/api_repo.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -37,6 +38,9 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider<KeypadCubit>(
           create: (context) => KeypadCubit(),
+        ),
+        BlocProvider<PaymentMethodCubit>(
+          create: (context) => PaymentMethodCubit(apiRepo: apiRepo),
         ),
       ],
       child: MaterialApp(
