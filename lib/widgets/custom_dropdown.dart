@@ -32,6 +32,9 @@ class CustomDropDown extends StatelessWidget {
           );
         }
         if (state is PaymentMethodSuccess) {
+          context
+              .read<SelectedPayMethodCubit>()
+              .setSelectedPaymentMethod(paymentMethodModel: state.data[0]);
           return DropdownButtonFormField(
             iconEnabledColor: ColorPallet.whiteColor,
             isExpanded: true,
@@ -48,10 +51,18 @@ class CustomDropDown extends StatelessWidget {
                 .map(
                   (e) => DropdownMenuItem(
                     value: e,
-                    child: SizedBox(
-                      height: 20,
-                      width: 20,
-                      child: SvgPicture.string(e.icon!),
+                    child: BlocBuilder<SelectedPayMethodCubit,
+                        SelectedPayMethodState>(
+                      builder: (context, state) {
+                        if (state is SelectedPayMethodSelected) {
+                          return SizedBox(
+                            height: 20,
+                            width: 20,
+                            child: SvgPicture.string(e.icon!),
+                          );
+                        }
+                        return const SizedBox();
+                      },
                     ),
                   ),
                 )

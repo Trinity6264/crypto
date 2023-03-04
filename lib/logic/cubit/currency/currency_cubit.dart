@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:bloc/bloc.dart';
@@ -12,6 +13,7 @@ part 'currency_state.dart';
 class CurrencyCubit extends Cubit<CurrencyState> {
   final ApiRepo apiRepo;
   CurrencyCubit({required this.apiRepo}) : super(CurrencyInitial());
+  CurrencyModel? currencyModel;
 
   Future<void> getCryptoCurrency() async {
     try {
@@ -32,11 +34,12 @@ class CurrencyCubit extends Cubit<CurrencyState> {
             errorMessage: 'Something happened, Sorry try again 🥳'),
       );
     } catch (e) {
-      
       emit(
         const CurrencyFailed(
             errorMessage: 'Something happened, Sorry try again 🥳'),
       );
     }
   }
+
+ 
 }

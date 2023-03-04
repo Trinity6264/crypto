@@ -1,11 +1,15 @@
+import 'package:crypto/app/service_locator.dart';
 import 'package:crypto/helper/color_pallet.dart';
 import 'package:crypto/logic/cubit/currency/currency_cubit.dart';
+import 'package:crypto/logic/cubit/selected_currency/selected_currency_cubit.dart';
+import 'package:crypto/service/nav_service.dart';
 import 'package:crypto/widgets/card_wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ChooseToken extends StatelessWidget {
   const ChooseToken({super.key});
+  static final _navService = locator.get<NavigationServices>();
 
   @override
   Widget build(BuildContext context) {
@@ -116,6 +120,12 @@ class ChooseToken extends StatelessWidget {
                     itemBuilder: (context, index) {
                       final currencyData = state.currencies[index];
                       return ListTile(
+                        onTap: () {
+                          context
+                              .read<SelectedCurrencyCubit>()
+                              .selectedCurrency(currencyData);
+                          _navService.goBack();
+                        },
                         leading: CircleAvatar(
                           backgroundColor: ColorPallet.lightGrayColor,
                           backgroundImage:
