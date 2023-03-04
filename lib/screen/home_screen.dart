@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:crypto/app/app_router.dart';
 import 'package:crypto/app/service_locator.dart';
 import 'package:crypto/helper/color_pallet.dart';
@@ -341,9 +343,12 @@ class GetQuoteButton extends StatelessWidget {
                   _navService.showBanner('Enter amount needed');
                   return;
                 }
-
+                log(userInput +
+                    spm.symbol.toString() +
+                    sc.symbol.toString() +
+                    spo.id.toString());
                 await context.read<PriceCubit>().getPriceDetails(
-                      amount: '9000',
+                      amount: userInput,
                       cryptoCurrency: 'ETH',
                       fiatCurrency: 'GBP',
                       network: 'ethereum',

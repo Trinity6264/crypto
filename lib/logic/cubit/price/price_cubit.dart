@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:bloc/bloc.dart';
 import 'package:crypto/model/price_model.dart';
 import 'package:crypto/repository/api_repo.dart';
+import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
 
 part 'price_state.dart';
@@ -40,6 +41,13 @@ class PriceCubit extends Cubit<PriceState> {
       emit(
         const PriceFailure(
             errorMessage: 'Something happened, Sorry try again 🥳'),
+      );
+    } on DioError catch (e) {
+      log(e.response!.data['error']['message'].toString());
+      emit(
+        PriceFailure(
+            errorMessage: e.response?.data['error']['message'] ??
+                'Something happened, Sorry try again 🥳'),
       );
     } catch (e) {
       log(e.runtimeType.toString());

@@ -1,8 +1,10 @@
 import 'package:crypto/app/service_locator.dart';
 import 'package:crypto/helper/color_pallet.dart';
+import 'package:crypto/logic/cubit/price/price_cubit.dart';
 import 'package:crypto/service/nav_service.dart';
 import 'package:crypto/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SelectQuoteScreen extends StatelessWidget {
   const SelectQuoteScreen({super.key});
@@ -120,62 +122,85 @@ class SelectQuoteScreen extends StatelessWidget {
                     color: ColorPallet.primaryColor,
                   ),
                 ),
-                child: Column(
-                  children: [
-                    Row(
-                      children: [
-                        const Icon(Icons.swap_vert,
-                            color: ColorPallet.whiteColor),
-                        const SizedBox(width: 5),
-                        const Text(
-                          'Transak',
-                          style: TextStyle(
-                            color: ColorPallet.whiteColor,
-                            fontWeight: FontWeight.bold,
+                child: BlocBuilder<PriceCubit, PriceState>(
+                  builder: (context, state) {
+                    if (state is PriceSuccess) {
+                      final price = state.priceModel;
+                      return Column(
+                        children: [
+                          Row(
+                            children: [
+                              const Icon(Icons.swap_vert,
+                                  color: ColorPallet.whiteColor),
+                              const SizedBox(width: 5),
+                              const Text(
+                                'Transak',
+                                style: TextStyle(
+                                  color: ColorPallet.whiteColor,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              const SizedBox(width: 5),
+                              Icon(
+                                Icons.add_circle_outline,
+                                color: ColorPallet.textColor,
+                                size: size.width * .03,
+                              ),
+                              const Spacer(),
+                              const Text(
+                                '50.75 DAI',
+                                style: TextStyle(
+                                  color: ColorPallet.whiteColor,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
                           ),
-                        ),
-                        const SizedBox(width: 5),
-                        Icon(
-                          Icons.add_circle_outline,
+                          SizedBox(height: size.height * .01),
+                          rowText(
+                              'Price INR', '=${price.fiatAmount} INR', context),
+                          SizedBox(height: size.height * .005),
+                          rowText(
+                              'Total Fees', '=${price.totalFee} INR', context),
+                          SizedBox(height: size.height * .005),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 8),
+                            child: rowText(
+                                'Process Fees',
+                                '=${price.feeBreakdown![0].value} INR',
+                                context),
+                          ),
+                          SizedBox(height: size.height * .005),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 8),
+                            child: rowText(
+                                'Network Fees',
+                                '=${price.feeBreakdown![1].value} INR',
+                                context),
+                          ),
+                          SizedBox(height: size.height * .005),
+                          rowText('Total ', '=${price.totalFee} INR', context),
+                          SizedBox(height: size.height * .02),
+                          SizedBox(
+                            width: double.infinity,
+                            height: size.height * .05,
+                            child: CustomButton(
+                              onPressed: () {},
+                              text: 'Buy with Transak',
+                            ),
+                          ),
+                        ],
+                      );
+                    }
+                    return const Center(
+                      child: Text(
+                        'No Data',
+                        style: TextStyle(
                           color: ColorPallet.textColor,
-                          size: size.width * .03,
                         ),
-                        const Spacer(),
-                        const Text(
-                          '50.75 DAI',
-                          style: TextStyle(
-                            color: ColorPallet.whiteColor,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: size.height * .01),
-                    rowText('Price INR', '=\$4445.97 INR', context),
-                    SizedBox(height: size.height * .005),
-                    rowText('Total Fees', '=\$554.03 INR', context),
-                    SizedBox(height: size.height * .005),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8),
-                      child: rowText('Process Fees', '=\$504.03 INR', context),
-                    ),
-                    SizedBox(height: size.height * .005),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8),
-                      child: rowText('Network Fees', '=\$50 INR', context),
-                    ),
-                    SizedBox(height: size.height * .005),
-                    rowText('Total ', '=\$5000 INR', context),
-                    SizedBox(height: size.height * .02),
-                    SizedBox(
-                      width: double.infinity,
-                      height: size.height * .05,
-                      child: CustomButton(
-                        onPressed: () {},
-                        text: 'Buy with Transak',
                       ),
-                    ),
-                  ],
+                    );
+                  },
                 ),
               ),
             ],
