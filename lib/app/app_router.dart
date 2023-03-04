@@ -1,6 +1,7 @@
 import 'package:crypto/screen/home_screen.dart';
 import 'package:crypto/screen/select_qoute_screen.dart';
 import 'package:crypto/screen/splash_screen.dart';
+import 'package:crypto/screen/webview_screen.dart';
 import 'package:flutter/material.dart';
 
 class AppRouter {
@@ -8,6 +9,7 @@ class AppRouter {
   static const String splashScreen = '/';
   static const String homeScreen = '/home';
   static const String selectQuoteScreen = '/select-quote';
+  static const String webViewScreen = '/webview';
 
 
   static Route<dynamic> onGenerateRoutes(RouteSettings settings) {
@@ -18,6 +20,8 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) => const HomeScreen());
       case selectQuoteScreen:
         return MaterialPageRoute(builder: (_) => const SelectQuoteScreen());
+      case webViewScreen:
+        return MaterialPageRoute(builder: (_) => const WebViewScreen());
       default:
         throw const FormatException('Routes not found');
     }

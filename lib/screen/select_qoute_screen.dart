@@ -1,3 +1,4 @@
+import 'package:crypto/app/app_router.dart';
 import 'package:crypto/app/service_locator.dart';
 import 'package:crypto/helper/color_pallet.dart';
 import 'package:crypto/logic/cubit/price/price_cubit.dart';
@@ -185,7 +186,9 @@ class SelectQuoteScreen extends StatelessWidget {
                             width: double.infinity,
                             height: size.height * .05,
                             child: CustomButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                _navService.pushNamed(AppRouter.webViewScreen);
+                              },
                               text: 'Buy with Transak',
                             ),
                           ),
