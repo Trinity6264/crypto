@@ -5,6 +5,7 @@ import 'package:crypto/logic/cubit/country/country_cubit.dart';
 import 'package:crypto/logic/cubit/currency/currency_cubit.dart';
 import 'package:crypto/logic/cubit/keypad/keypad_cubit.dart';
 import 'package:crypto/logic/cubit/paymentmethod/paymentmethod_cubit.dart';
+import 'package:crypto/logic/cubit/selected_payment/selected_paymethod_cubit.dart';
 import 'package:crypto/service/nav_service.dart';
 import 'package:crypto/widgets/card_wrapper.dart';
 import 'package:crypto/widgets/crypto_type_display.dart';
@@ -183,29 +184,26 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ),
                       SizedBox(height: size.height * .01),
-                      BlocBuilder<PaymentMethodCubit, PaymentMethodState>(
+                      BlocBuilder<SelectedPayMethodCubit,
+                          SelectedPayMethodState>(
                         builder: (context, state) {
-                          if (state is PaymentMethodLoading) {
-                            return const Center(
-                                child: CircularProgressIndicator());
-                          }
-                          if (state is PaymentMethodFailure) {
-                            return Center(
-                              child: TextButton.icon(
-                                onPressed: () {},
-                                icon: const Icon(
-                                  Icons.refresh_rounded,
-                                  color: ColorPallet.textColor,
-                                ),
-                                label: Text(
-                                  state.errorMessage,
-                                  style: const TextStyle(
-                                      color: ColorPallet.whiteColor),
+                          if (state is SelectedPayMethodInitial) {
+                            return Container(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 25),
+                              width: double.infinity,
+                              height: size.height * .08,
+                              child: const CardWrapper(
+                                child: Text(
+                                  'Please select payment method',
+                                  style: TextStyle(
+                                    color: ColorPallet.textColor,
+                                  ),
                                 ),
                               ),
                             );
                           }
-                          if (state is PaymentMethodSuccess) {
+                          if (state is SelectedPayMethodSelected) {
                             return GestureDetector(
                               onTap: () {
                                 requestModelSheet(
@@ -227,9 +225,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                             borderRadius:
                                                 BorderRadius.circular(5),
                                           ),
-                                          child: SvgPicture.network(
-                                            state.data[0].paymentOptions![0]
-                                                .icon!,
+                                          child: SvgPicture.string(
+                                            state.paymentMethodModel.icon!,
                                             semanticsLabel: 'Logo',
                                             placeholderBuilder: (context) =>
                                                 const Center(
@@ -238,7 +235,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           )),
                                       const SizedBox(width: 8),
                                       Text(
-                                        state.data[0].symbol ?? '-',
+                                        state.paymentMethodModel.symbol ?? '-',
                                         style: TextStyle(
                                           color: ColorPallet.textColor,
                                           fontWeight: FontWeight.w500,

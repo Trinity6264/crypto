@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:bloc/bloc.dart';
+import 'package:crypto/logic/cubit/selected_payment/selected_paymethod_cubit.dart';
 import 'package:crypto/model/payment_method_model.dart';
 import 'package:crypto/repository/api_repo.dart';
 import 'package:equatable/equatable.dart';
@@ -10,7 +11,7 @@ import 'package:equatable/equatable.dart';
 part 'paymentmethod_state.dart';
 
 class PaymentMethodCubit extends Cubit<PaymentMethodState> {
-    final ApiRepo apiRepo;
+  final ApiRepo apiRepo;
   PaymentMethodCubit({required this.apiRepo}) : super(PaymentMethodInitial());
 
   Future<void> getPaymentMethod() async {
@@ -18,11 +19,11 @@ class PaymentMethodCubit extends Cubit<PaymentMethodState> {
       emit(PaymentMethodLoading());
       final res = await apiRepo.getPaymentMethod();
       if (res.isNotEmpty) {
+        SelectedPayMethodCubit().setSelectedPaymentMethod(paymentMethodModel: res[0]);
         emit(PaymentMethodSuccess(data: res));
         return;
       }
-    } 
-    on SocketException catch (_) {
+    } on SocketException catch (_) {
       emit(const PaymentMethodFailure(
           errorMessage: 'Connection error,check your internet connection '));
     } on TimeoutException catch (_) {

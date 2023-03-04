@@ -2,6 +2,7 @@
 import 'package:crypto/logic/cubit/country/country_cubit.dart';
 import 'package:crypto/logic/cubit/keypad/keypad_cubit.dart';
 import 'package:crypto/logic/cubit/paymentmethod/paymentmethod_cubit.dart';
+import 'package:crypto/logic/cubit/selected_payment/selected_paymethod_cubit.dart';
 import 'package:crypto/repository/api_repo.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -41,6 +42,9 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider<PaymentMethodCubit>(
           create: (context) => PaymentMethodCubit(apiRepo: apiRepo),
+        ),
+        BlocProvider<SelectedPayMethodCubit>(
+          create: (context) => SelectedPayMethodCubit(),
         ),
       ],
       child: MaterialApp(
