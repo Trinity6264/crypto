@@ -2,6 +2,7 @@
 import 'package:crypto/logic/cubit/country/country_cubit.dart';
 import 'package:crypto/logic/cubit/keypad/keypad_cubit.dart';
 import 'package:crypto/logic/cubit/paymentmethod/paymentmethod_cubit.dart';
+import 'package:crypto/logic/cubit/price/price_cubit.dart';
 import 'package:crypto/logic/cubit/selected_currency/selected_currency_cubit.dart';
 import 'package:crypto/logic/cubit/selected_payment/selected_paymethod_cubit.dart';
 import 'package:crypto/logic/cubit/selected_payment_option/selected_payment_option_cubit.dart';
@@ -53,6 +54,9 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider<SelectedPaymentOptionCubit>(
           create: (context) => SelectedPaymentOptionCubit(),
+        ),
+        BlocProvider<PriceCubit>(
+          create: (context) => PriceCubit(apiRepo: apiRepo),
         ),
       ],
       child: MaterialApp(

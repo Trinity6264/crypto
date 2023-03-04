@@ -4,6 +4,7 @@ import 'package:crypto/helper/color_pallet.dart';
 import 'package:crypto/logic/cubit/currency/currency_cubit.dart';
 import 'package:crypto/logic/cubit/keypad/keypad_cubit.dart';
 import 'package:crypto/logic/cubit/paymentmethod/paymentmethod_cubit.dart';
+import 'package:crypto/logic/cubit/price/price_cubit.dart';
 import 'package:crypto/logic/cubit/selected_currency/selected_currency_cubit.dart';
 import 'package:crypto/logic/cubit/selected_payment/selected_paymethod_cubit.dart';
 import 'package:crypto/logic/cubit/selected_payment_option/selected_payment_option_cubit.dart';
@@ -304,7 +305,7 @@ class GetQuoteButton extends StatelessWidget {
       height: size.height * .05,
       child: CustomButton(
           text: 'Get quotes',
-          onPressed: () {
+          onPressed: () async {
             final spo =
                 context.read<SelectedPaymentOptionCubit>().paymentOptions;
             final sc = context.read<SelectedCurrencyCubit>().currency;
@@ -326,6 +327,13 @@ class GetQuoteButton extends StatelessWidget {
             }
 
             _navService.pushNamed(AppRouter.selectQuoteScreen);
+            await context.read<PriceCubit>().getPriceDetails(
+                  amount: '9000',
+                  cryptoCurrency: 'ETH',
+                  fiatCurrency: 'GBP',
+                  network: 'ethereum',
+                  paymentMethod: 'gbp_bank_transfer',
+                );
           }),
     );
   }

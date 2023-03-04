@@ -1,7 +1,10 @@
+import 'dart:developer';
+
 import 'package:crypto/app/service_locator.dart';
 import 'package:crypto/model/country_model.dart';
 import 'package:crypto/model/currency_model.dart';
 import 'package:crypto/model/payment_method_model.dart';
+import 'package:crypto/model/price_model.dart';
 import 'package:crypto/service/api_service.dart';
 
 class ApiRepo {
@@ -32,5 +35,28 @@ class ApiRepo {
     List<PaymentMethodModel> methods =
         data.map((e) => PaymentMethodModel.fromJson(e)).toList();
     return methods;
+  }
+
+  Future<PriceModel?> getPriceDetail(
+    {
+       required String fiatCurrency,
+    required String cryptoCurrency,
+    required String paymentMethod,
+    required String amount,
+    required String network,
+    }
+  ) async {
+    final res = await apiService.getPrice(
+      amount: amount,
+      cryptoCurrency: cryptoCurrency,
+      fiatCurrency: fiatCurrency,
+      network: network,
+      paymentMethod: paymentMethod,
+    );
+    if (res.statusCode != 200) throw Exception({});
+    final data = res.data['response'];
+    log(data.toString());
+    // PriceModel methods = PaymentMethodModel.fromJson(data)
+    return null;
   }
 }
