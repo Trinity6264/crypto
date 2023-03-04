@@ -7,9 +7,18 @@ part 'selected_paymethod_state.dart';
 class SelectedPayMethodCubit extends Cubit<SelectedPayMethodState> {
   SelectedPayMethodCubit() : super(SelectedPayMethodInitial());
 
-  void setSelectedPaymentMethod({
-    required PaymentMethodModel paymentMethodModel,
-  }) {
+  static PaymentMethodModel? _paymentMethod;
+  // getter
+  PaymentMethodModel? get paymentMethod => _paymentMethod;
+
+// setter
+  void setPaymentMethod(PaymentMethodModel paymentMethod) {
+    _paymentMethod = paymentMethod;
+  }
+
+  void setSelectedPaymentMethod(
+      {required PaymentMethodModel paymentMethodModel}) {
+    setPaymentMethod(paymentMethodModel);
     emit(SelectedPayMethodSelected(paymentMethodModel: paymentMethodModel));
   }
 }

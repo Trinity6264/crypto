@@ -61,6 +61,7 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.blue,
         ),
         navigatorKey: navigationKey,
+        scaffoldMessengerKey: scaffoldKey,
         onGenerateRoute: AppRouter.onGenerateRoutes,
       ),
     );

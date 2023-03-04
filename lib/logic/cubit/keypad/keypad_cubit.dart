@@ -6,10 +6,20 @@ part 'keypad_state.dart';
 class KeypadCubit extends Cubit<KeypadState> {
   KeypadCubit() : super(KeypadInitial());
 
+  static String _userInputs = '';
+  // getter
+  String get userInputs => _userInputs;
+
+// setter
+  void setUserInputs(String userInputs) {
+    _userInputs = userInputs;
+  }
+
   String inputs = '';
 
   void getUserInput({required String input}) {
     inputs += input;
+    setUserInputs(inputs);
     emit(KeypadTyping(input: inputs));
   }
 
@@ -21,7 +31,7 @@ class KeypadCubit extends Cubit<KeypadState> {
     final rem = inputs.split('');
     rem.removeAt(rem.length - 1);
     inputs = rem.join('');
-
+    setUserInputs(inputs);
     emit(KeypadTyping(input: inputs));
   }
 }

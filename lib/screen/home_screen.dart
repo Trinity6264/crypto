@@ -1,10 +1,10 @@
 import 'package:crypto/app/app_router.dart';
 import 'package:crypto/app/service_locator.dart';
 import 'package:crypto/helper/color_pallet.dart';
-import 'package:crypto/logic/cubit/country/country_cubit.dart';
 import 'package:crypto/logic/cubit/currency/currency_cubit.dart';
 import 'package:crypto/logic/cubit/keypad/keypad_cubit.dart';
 import 'package:crypto/logic/cubit/paymentmethod/paymentmethod_cubit.dart';
+import 'package:crypto/logic/cubit/selected_currency/selected_currency_cubit.dart';
 import 'package:crypto/logic/cubit/selected_payment/selected_paymethod_cubit.dart';
 import 'package:crypto/logic/cubit/selected_payment_option/selected_payment_option_cubit.dart';
 import 'package:crypto/service/nav_service.dart';
@@ -24,7 +24,6 @@ class HomeScreen extends StatefulWidget {
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
-  static final _navService = locator.get<NavigationServices>();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
@@ -274,17 +273,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         },
                       ),
                       SizedBox(height: size.height * .03),
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 25),
-                        width: double.infinity,
-                        height: size.height * .05,
-                        child: CustomButton(
-                            text: 'Get quotes',
-                            onPressed: () {
-                              HomeScreen._navService
-                                  .pushNamed(AppRouter.selectQuoteScreen);
-                            }),
-                      ),
+                      const GetQuoteButton(),
                     ],
                   ),
                 ),
@@ -294,6 +283,50 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
       ),
+    );
+  }
+}
+
+class GetQuoteButton extends StatelessWidget {
+  const GetQuoteButton({
+    super.key,
+  });
+
+  static final _navService = locator.get<NavigationServices>();
+
+  @override
+  Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 25),
+      width: double.infinity,
+      height: size.height * .05,
+      child: CustomButton(
+          text: 'Get quotes',
+          onPressed: () {
+            final spo =
+                context.read<SelectedPaymentOptionCubit>().paymentOptions;
+            final sc = context.read<SelectedCurrencyCubit>().currency;
+            final spm = context.read<SelectedPayMethodCubit>().paymentMethod;
+            final userInput = context.read<KeypadCubit>().userInputs;
+
+            if (spo == null) {
+              _navService.showBanner('Payment options must be selected');
+              return;
+            } else if (spm == null) {
+              _navService.showBanner('Select a payment method');
+              return;
+            } else if (sc == null) {
+              _navService.showBanner('Select a currency');
+              return;
+            } else if (userInput == '') {
+              _navService.showBanner('Enter amount needed');
+              return;
+            }
+
+            _navService.pushNamed(AppRouter.selectQuoteScreen);
+          }),
     );
   }
 }

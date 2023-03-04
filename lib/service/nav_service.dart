@@ -23,7 +23,6 @@ class NavigationServices {
     navigationKey.currentState!.pop();
   }
 
-
   FutureOr<dynamic> showSnackBar(String message) {
     scaffoldKey.currentState!.showSnackBar(
       SnackBar(
