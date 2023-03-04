@@ -6,6 +6,7 @@ import 'package:crypto/logic/cubit/currency/currency_cubit.dart';
 import 'package:crypto/logic/cubit/keypad/keypad_cubit.dart';
 import 'package:crypto/logic/cubit/paymentmethod/paymentmethod_cubit.dart';
 import 'package:crypto/logic/cubit/selected_payment/selected_paymethod_cubit.dart';
+import 'package:crypto/logic/cubit/selected_payment_option/selected_payment_option_cubit.dart';
 import 'package:crypto/service/nav_service.dart';
 import 'package:crypto/widgets/card_wrapper.dart';
 import 'package:crypto/widgets/crypto_type_display.dart';
@@ -204,6 +205,12 @@ class _HomeScreenState extends State<HomeScreen> {
                             );
                           }
                           if (state is SelectedPayMethodSelected) {
+                            context
+                                .read<SelectedPaymentOptionCubit>()
+                                .getPaymentOption(
+                                  paymentOption: state
+                                      .paymentMethodModel.paymentOptions![0],
+                                );
                             return GestureDetector(
                               onTap: () {
                                 requestModelSheet(
@@ -234,13 +241,22 @@ class _HomeScreenState extends State<HomeScreen> {
                                                         CircularProgressIndicator()),
                                           )),
                                       const SizedBox(width: 8),
-                                      Text(
-                                        state.paymentMethodModel.symbol ?? '-',
-                                        style: TextStyle(
-                                          color: ColorPallet.textColor,
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: size.width * .06,
-                                        ),
+                                      BlocBuilder<SelectedPaymentOptionCubit,
+                                          SelectedPaymentOptionState>(
+                                        builder: (context, state) {
+                                          if (state
+                                              is SelectedPaymentOptionAdded) {
+                                            return Text(
+                                              state.paymentOptions.name ?? '-',
+                                              style: TextStyle(
+                                                color: ColorPallet.textColor,
+                                                fontWeight: FontWeight.w500,
+                                                fontSize: size.width * .06,
+                                              ),
+                                            );
+                                          }
+                                          return const SizedBox();
+                                        },
                                       ),
                                       const Spacer(),
                                       Icon(
