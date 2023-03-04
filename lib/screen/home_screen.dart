@@ -303,38 +303,55 @@ class GetQuoteButton extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 25),
       width: double.infinity,
       height: size.height * .05,
-      child: CustomButton(
-          text: 'Get quotes',
-          onPressed: () async {
-            final spo =
-                context.read<SelectedPaymentOptionCubit>().paymentOptions;
-            final sc = context.read<SelectedCurrencyCubit>().currency;
-            final spm = context.read<SelectedPayMethodCubit>().paymentMethod;
-            final userInput = context.read<KeypadCubit>().userInputs;
-
-            if (spo == null) {
-              _navService.showBanner('Payment options must be selected');
-              return;
-            } else if (spm == null) {
-              _navService.showBanner('Select a payment method');
-              return;
-            } else if (sc == null) {
-              _navService.showBanner('Select a currency');
-              return;
-            } else if (userInput == '') {
-              _navService.showBanner('Enter amount needed');
-              return;
-            }
-
+      child: BlocConsumer<PriceCubit, PriceState>(
+        listener: (context, state) {
+          if (state is PriceFailure) {
+            _navService.showSnackBar(state.errorMessage);
+          }
+          if (state is PriceSuccess) {
             _navService.pushNamed(AppRouter.selectQuoteScreen);
-            await context.read<PriceCubit>().getPriceDetails(
-                  amount: '9000',
-                  cryptoCurrency: 'ETH',
-                  fiatCurrency: 'GBP',
-                  network: 'ethereum',
-                  paymentMethod: 'gbp_bank_transfer',
-                );
-          }),
+          }
+        },
+        builder: (context, state) {
+          if (state is PriceLoading) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+          return CustomButton(
+              text: 'Get quotes',
+              onPressed: () async {
+                final spo =
+                    context.read<SelectedPaymentOptionCubit>().paymentOptions;
+                final sc = context.read<SelectedCurrencyCubit>().currency;
+                final spm =
+                    context.read<SelectedPayMethodCubit>().paymentMethod;
+                final userInput = context.read<KeypadCubit>().userInputs;
+
+                if (spo == null) {
+                  _navService.showBanner('Payment options must be selected');
+                  return;
+                } else if (spm == null) {
+                  _navService.showBanner('Select a payment method');
+                  return;
+                } else if (sc == null) {
+                  _navService.showBanner('Select a currency');
+                  return;
+                } else if (userInput == '') {
+                  _navService.showBanner('Enter amount needed');
+                  return;
+                }
+
+                await context.read<PriceCubit>().getPriceDetails(
+                      amount: '9000',
+                      cryptoCurrency: 'ETH',
+                      fiatCurrency: 'GBP',
+                      network: 'ethereum',
+                      paymentMethod: 'gbp_bank_transfer',
+                    );
+              });
+        },
+      ),
     );
   }
 }

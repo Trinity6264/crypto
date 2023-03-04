@@ -1,6 +1,6 @@
 class PaymentMethodModel {
   String? symbol;
-  List<String>? supportingCountries;
+  List<dynamic>? supportingCountries;
   String? logoSymbol;
   String? name;
   bool? isPopular;
@@ -24,7 +24,7 @@ class PaymentMethodModel {
 
   PaymentMethodModel.fromJson(Map<String, dynamic> json) {
     symbol = json['symbol'];
-    supportingCountries = json['supportingCountries'].cast<String>();
+    supportingCountries = json['supportingCountries'];
     logoSymbol = json['logoSymbol'];
     name = json['name'];
     isPopular = json['isPopular'];

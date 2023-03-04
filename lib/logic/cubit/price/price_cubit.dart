@@ -14,7 +14,7 @@ class PriceCubit extends Cubit<PriceState> {
   PriceCubit({required this.apiRepo}) : super(PriceInitial());
 
   Future<void> getPriceDetails({
-     required String fiatCurrency,
+    required String fiatCurrency,
     required String cryptoCurrency,
     required String paymentMethod,
     required String amount,
@@ -23,15 +23,12 @@ class PriceCubit extends Cubit<PriceState> {
     try {
       emit(PriceLoading());
       final res = await apiRepo.getPriceDetail(
-        amount: amount,
-        cryptoCurrency: cryptoCurrency,
-        fiatCurrency: fiatCurrency,
-        network: network,
-        paymentMethod: paymentMethod
-      );
-      if (res != null) {
-        log('workgggg');
-      }
+          amount: amount,
+          cryptoCurrency: cryptoCurrency,
+          fiatCurrency: fiatCurrency,
+          network: network,
+          paymentMethod: paymentMethod);
+      emit(PriceSuccess(priceModel: res));
     } on SocketException catch (_) {
       emit(const PriceFailure(
           errorMessage: 'Connection error,check your internet connection '));

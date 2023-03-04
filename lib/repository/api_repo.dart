@@ -37,15 +37,13 @@ class ApiRepo {
     return methods;
   }
 
-  Future<PriceModel?> getPriceDetail(
-    {
-       required String fiatCurrency,
+  Future<PriceModel> getPriceDetail({
+    required String fiatCurrency,
     required String cryptoCurrency,
     required String paymentMethod,
     required String amount,
     required String network,
-    }
-  ) async {
+  }) async {
     final res = await apiService.getPrice(
       amount: amount,
       cryptoCurrency: cryptoCurrency,
@@ -54,9 +52,8 @@ class ApiRepo {
       paymentMethod: paymentMethod,
     );
     if (res.statusCode != 200) throw Exception({});
-    final data = res.data['response'];
-    log(data.toString());
-    // PriceModel methods = PaymentMethodModel.fromJson(data)
-    return null;
+    final data = res.data['response'] as Map<String, dynamic>;
+    final methods = PriceModel.fromJson(data);
+    return methods;
   }
 }
