@@ -27,9 +27,9 @@ class CryptoTypeDisplay extends StatelessWidget {
               },
               icon:
                   const Icon(Icons.rotate_right, color: ColorPallet.whiteColor),
-              label: Text(
-                state.errorMessage,
-                style: const TextStyle(
+              label:const Text(
+                'Sorry for the inconvenience, tap to try again',
+                style: TextStyle(
                   color: ColorPallet.whiteColor,
                 ),
               ),
