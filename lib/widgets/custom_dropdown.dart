@@ -16,14 +16,16 @@ class CustomDropDown extends StatelessWidget {
       builder: (context, state) {
         if (state is CurrencyFiatLoading) {
           return const CardWrapper(
-            child: SizedBox(),
+            child: CircularProgressIndicator(color: ColorPallet.textColor),
           );
         }
         if (state is CurrencyFiatFailure) {
           return CardWrapper(
-            child: Text(
-              state.errorMessage,
-              style: const TextStyle(
+            child: IconButton(
+              onPressed: () async =>
+                  await context.read<CurrencyFiatCubit>().getCurrencyFiat(),
+              icon: const Icon(
+                Icons.restart_alt,
                 color: ColorPallet.whiteColor,
               ),
             ),
