@@ -96,7 +96,7 @@ class PriceModel {
 
 class FeeBreakdown {
   String? name;
-  double? value;
+  num? value;
   String? id;
   List<String>? ids;
 

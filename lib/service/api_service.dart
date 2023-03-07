@@ -12,12 +12,6 @@ class ApiService {
     return resp;
   }
 
-  // get all crypto country
-  Future<Response> getCountry() async {
-    final resp = await dioService.get('api/v2/countries');
-    return resp;
-  }
-
   // get all crypto currency payment method
   Future<Response> getPaymentMethod() async {
     final resp = await dioService.get('api/v2/currencies/fiat-currencies');

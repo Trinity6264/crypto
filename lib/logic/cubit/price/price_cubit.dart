@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:bloc/bloc.dart';
@@ -36,21 +35,18 @@ class PriceCubit extends Cubit<PriceState> {
     } on TimeoutException catch (_) {
       emit(const PriceFailure(
           errorMessage: 'Timeout,check your internet connection '));
-    } on HandshakeException catch (e) {
-      log(e.toString());
+    } on HandshakeException catch (_) {
       emit(
         const PriceFailure(
             errorMessage: 'Something happened, Sorry try again 🥳'),
       );
     } on DioError catch (e) {
-      log(e.response!.data['error']['message'].toString());
       emit(
         PriceFailure(
             errorMessage: e.response?.data['error']['message'] ??
                 'Something happened, Sorry try again 🥳'),
       );
     } catch (e) {
-      log(e.runtimeType.toString());
       emit(
         const PriceFailure(
             errorMessage: 'Something happened, Sorry try again 🥳'),

@@ -1,7 +1,10 @@
+import 'dart:developer';
+
 import 'package:crypto/app/app_router.dart';
 import 'package:crypto/app/service_locator.dart';
 import 'package:crypto/helper/color_pallet.dart';
 import 'package:crypto/logic/cubit/price/price_cubit.dart';
+import 'package:crypto/logic/cubit/selected_payment/selected_currency_fiat_cubit.dart';
 import 'package:crypto/service/nav_service.dart';
 import 'package:crypto/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +17,7 @@ class SelectQuoteScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+    final scf = context.read<SelectedCurrencyFiatCubit>().currencyFiat;
     return Scaffold(
       backgroundColor: ColorPallet.lightGrayColor,
       body: SafeArea(
@@ -127,6 +131,7 @@ class SelectQuoteScreen extends StatelessWidget {
                   builder: (context, state) {
                     if (state is PriceSuccess) {
                       final price = state.priceModel;
+                      log(price.cryptoCurrency.toString());
                       return Column(
                         children: [
                           Row(
@@ -158,17 +163,17 @@ class SelectQuoteScreen extends StatelessWidget {
                             ],
                           ),
                           SizedBox(height: size.height * .01),
-                          rowText(
-                              'Price INR', '=${price.fiatAmount} INR', context),
+                          rowText('Price ${scf!.symbol}',
+                              '=${price.fiatAmount} ${scf.symbol}', context),
                           SizedBox(height: size.height * .005),
-                          rowText(
-                              'Total Fees', '=${price.totalFee} INR', context),
+                          rowText('Total Fees',
+                              '=${price.totalFee} ${scf.symbol}', context),
                           SizedBox(height: size.height * .005),
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 8),
                             child: rowText(
                                 'Process Fees',
-                                '=${price.feeBreakdown![0].value} INR',
+                                '=${price.feeBreakdown![0].value} ${scf.symbol}',
                                 context),
                           ),
                           SizedBox(height: size.height * .005),
@@ -176,11 +181,12 @@ class SelectQuoteScreen extends StatelessWidget {
                             padding: const EdgeInsets.symmetric(horizontal: 8),
                             child: rowText(
                                 'Network Fees',
-                                '=${price.feeBreakdown![1].value} INR',
+                                '=${price.feeBreakdown![1].value} ${scf.symbol}',
                                 context),
                           ),
                           SizedBox(height: size.height * .005),
-                          rowText('Total ', '=${price.totalFee} INR', context),
+                          rowText('Total ', '=${price.totalFee} ${scf.symbol}',
+                              context),
                           SizedBox(height: size.height * .02),
                           SizedBox(
                             width: double.infinity,

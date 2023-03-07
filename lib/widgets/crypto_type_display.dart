@@ -12,7 +12,6 @@ class CryptoTypeDisplay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
     return BlocBuilder<CurrencyCubit, CurrencyState>(
       builder: (context, state) {
         if (state is CurrencyLoading) {

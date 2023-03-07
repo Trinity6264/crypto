@@ -3,7 +3,6 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:bloc/bloc.dart';
-import 'package:crypto/logic/cubit/selected_payment/selected_currency_fiat_cubit.dart';
 import 'package:crypto/repository/api_repo.dart';
 import 'package:equatable/equatable.dart';
 
