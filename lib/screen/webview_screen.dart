@@ -1,7 +1,14 @@
+import 'dart:developer';
+
 import 'package:crypto/app/service_locator.dart';
 import 'package:crypto/helper/color_pallet.dart';
+import 'package:crypto/logic/cubit/keypad/keypad_cubit.dart';
+import 'package:crypto/logic/cubit/selected_currency/selected_currency_cubit.dart';
+import 'package:crypto/logic/cubit/selected_payment/selected_currency_fiat_cubit.dart';
+import 'package:crypto/logic/cubit/selected_payment_option/selected_payment_option_cubit.dart';
 import 'package:crypto/service/nav_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class WebViewScreen extends StatefulWidget {
@@ -14,20 +21,37 @@ class WebViewScreen extends StatefulWidget {
 class _WebViewScreenState extends State<WebViewScreen> {
   late WebViewController controller;
 
+  void test() {
+    final spo = context.read<SelectedPaymentOptionCubit>().paymentOptions;
+    final sc = context.read<SelectedCurrencyCubit>().currency;
+    final scf = context.read<SelectedCurrencyFiatCubit>().currencyFiat;
+    final userInput = context.read<KeypadCubit>().userInputs;
+    Future.delayed(const Duration(seconds: 1), () {
+      controller.runJavaScript(
+          "document.querySelector('#transak-calculator-source').value = $userInput");
+      controller.runJavaScript(
+          "document.querySelector('.ladda-label').style.color = 'red'");
+      controller.runJavaScript(
+          "document.querySelector('.btn-input > div > img').src = '${sc!.image}'");
+      controller.runJavaScript(
+          "document.querySelector('.btn-input > div').innerHtml = '${sc.symbol}'");
+    });
+  }
+
   @override
   void initState() {
     controller = WebViewController()
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
-      ..setBackgroundColor(const Color(0x00000000))
-      ..loadRequest(Uri.parse('https://global.transak.com/'))
       ..setNavigationDelegate(
         NavigationDelegate(
-          onProgress: (int progress) {
-            // Update loading bar.
+          onProgress: (int progress) {},
+          onPageStarted: (String url) async {},
+          onPageFinished: (String url) {
+            test();
           },
-          onPageStarted: (String url) {},
-          onPageFinished: (String url) {},
-          onWebResourceError: (WebResourceError error) {},
+          onWebResourceError: (WebResourceError error) {
+            log('Err ${error.description}');
+          },
           onNavigationRequest: (NavigationRequest request) {
             if (request.url.startsWith('https://global.transak.com/')) {
               return NavigationDecision.prevent;
@@ -37,7 +61,6 @@ class _WebViewScreenState extends State<WebViewScreen> {
         ),
       )
       ..loadRequest(Uri.parse('https://global.transak.com/'));
-
     super.initState();
   }
 
