@@ -21,20 +21,20 @@ class WebViewScreen extends StatefulWidget {
 class _WebViewScreenState extends State<WebViewScreen> {
   late WebViewController controller;
 
-  void test() {
-    final spo = context.read<SelectedPaymentOptionCubit>().paymentOptions;
-    final sc = context.read<SelectedCurrencyCubit>().currency;
-    final scf = context.read<SelectedCurrencyFiatCubit>().currencyFiat;
+  void init() {
+    // final spo = context.read<SelectedPaymentOptionCubit>().paymentOptions;
+    // final scf = context.read<SelectedCurrencyFiatCubit>().currencyFiat;
+    // final sc = context.read<SelectedCurrencyCubit>().currency;
     final userInput = context.read<KeypadCubit>().userInputs;
     Future.delayed(const Duration(seconds: 1), () {
       controller.runJavaScript(
           "document.querySelector('#transak-calculator-source').value = $userInput");
-      controller.runJavaScript(
-          "document.querySelector('.ladda-label').style.color = 'red'");
-      controller.runJavaScript(
-          "document.querySelector('.btn-input > div > img').src = '${sc!.image}'");
-      controller.runJavaScript(
-          "document.querySelector('.btn-input > div').innerHtml = '${sc.symbol}'");
+      // controller.runJavaScript(
+      //     "document.querySelector('.ladda-label').style.color = 'red'");
+      // controller.runJavaScript(
+      //     "document.querySelector('.btn-input > div > img').src = '${sc!.image}'");
+      // controller.runJavaScript(
+      //     "document.querySelector('.btn-input > div').innerHtml = '${sc.symbol}'");
     });
   }
 
@@ -47,7 +47,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
           onProgress: (int progress) {},
           onPageStarted: (String url) async {},
           onPageFinished: (String url) {
-            test();
+            init();
           },
           onWebResourceError: (WebResourceError error) {
             log('Err ${error.description}');
