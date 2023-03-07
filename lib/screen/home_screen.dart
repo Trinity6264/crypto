@@ -4,11 +4,11 @@ import 'package:crypto/app/app_router.dart';
 import 'package:crypto/app/service_locator.dart';
 import 'package:crypto/helper/color_pallet.dart';
 import 'package:crypto/logic/cubit/currency/currency_cubit.dart';
+import 'package:crypto/logic/cubit/currencyfiat/currency_fiat_cubit.dart';
 import 'package:crypto/logic/cubit/keypad/keypad_cubit.dart';
-import 'package:crypto/logic/cubit/paymentmethod/paymentmethod_cubit.dart';
 import 'package:crypto/logic/cubit/price/price_cubit.dart';
 import 'package:crypto/logic/cubit/selected_currency/selected_currency_cubit.dart';
-import 'package:crypto/logic/cubit/selected_payment/selected_paymethod_cubit.dart';
+import 'package:crypto/logic/cubit/selected_payment/selected_currency_fiat_cubit.dart';
 import 'package:crypto/logic/cubit/selected_payment_option/selected_payment_option_cubit.dart';
 import 'package:crypto/service/nav_service.dart';
 import 'package:crypto/widgets/card_wrapper.dart';
@@ -39,14 +39,14 @@ class _HomeScreenState extends State<HomeScreen> {
     await context.read<CurrencyCubit>().getCryptoCurrency();
   }
 
-  Future<void> getPaymentMethod() async {
-    await context.read<PaymentMethodCubit>().getPaymentMethod();
+  Future<void> getCurrencyMethod() async {
+    await context.read<CurrencyFiatCubit>().getCurrencyFiat();
   }
 
   @override
   void initState() {
     getCrypto();
-    getPaymentMethod();
+    getCurrencyMethod();
     super.initState();
   }
 
@@ -155,12 +155,12 @@ class _HomeScreenState extends State<HomeScreen> {
                               return Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  BlocBuilder<SelectedPayMethodCubit,
-                                      SelectedPayMethodState>(
+                                  BlocBuilder<SelectedCurrencyFiatCubit,
+                                      SelectedCurrencyFiatState>(
                                     builder: (context, state) {
-                                      if (state is SelectedPayMethodSelected) {
+                                      if (state is SelectedCurrencyFiatSelected) {
                                         return Text(
-                                          '${state.paymentMethodModel.symbol!} ',
+                                          '${state.currencyFiatModel.symbol!} ',
                                           style: TextStyle(
                                             color: ColorPallet.textColor,
                                             fontSize: size.width * .1,
@@ -184,12 +184,12 @@ class _HomeScreenState extends State<HomeScreen> {
                             return Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                BlocBuilder<SelectedPayMethodCubit,
-                                    SelectedPayMethodState>(
+                                BlocBuilder<SelectedCurrencyFiatCubit,
+                                    SelectedCurrencyFiatState>(
                                   builder: (context, state) {
-                                    if (state is SelectedPayMethodSelected) {
+                                    if (state is SelectedCurrencyFiatSelected) {
                                       return Text(
-                                        '${state.paymentMethodModel.symbol} ',
+                                        '${state.currencyFiatModel.symbol} ',
                                         style: TextStyle(
                                           color: ColorPallet.textColor,
                                           fontSize: size.width * .1,
@@ -227,10 +227,10 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ),
                       SizedBox(height: size.height * .01),
-                      BlocBuilder<SelectedPayMethodCubit,
-                          SelectedPayMethodState>(
+                      BlocBuilder<SelectedCurrencyFiatCubit,
+                          SelectedCurrencyFiatState>(
                         builder: (context, state) {
-                          if (state is SelectedPayMethodInitial) {
+                          if (state is SelectedCurrencyFiatInitial) {
                             return Container(
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 25),
@@ -246,12 +246,12 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                             );
                           }
-                          if (state is SelectedPayMethodSelected) {
+                          if (state is SelectedCurrencyFiatSelected) {
                             context
                                 .read<SelectedPaymentOptionCubit>()
                                 .getPaymentOption(
                                   paymentOption: state
-                                      .paymentMethodModel.paymentOptions![0],
+                                      .currencyFiatModel.paymentOptions![0],
                                 );
                             return GestureDetector(
                               onTap: () {
@@ -275,7 +275,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 BorderRadius.circular(5),
                                           ),
                                           child: SvgPicture.string(
-                                            state.paymentMethodModel.icon!,
+                                            state.currencyFiatModel.icon!,
                                             semanticsLabel: 'Logo',
                                             placeholderBuilder: (context) =>
                                                 const Center(
@@ -367,7 +367,7 @@ class GetQuoteButton extends StatelessWidget {
                     context.read<SelectedPaymentOptionCubit>().paymentOptions;
                 final sc = context.read<SelectedCurrencyCubit>().currency;
                 final spm =
-                    context.read<SelectedPayMethodCubit>().paymentMethod;
+                    context.read<SelectedCurrencyFiatCubit>().currencyFiat;
                 final userInput = context.read<KeypadCubit>().userInputs;
 
                 if (spo == null) {
@@ -389,10 +389,10 @@ class GetQuoteButton extends StatelessWidget {
                     spo.id.toString());
                 await context.read<PriceCubit>().getPriceDetails(
                       amount: userInput,
-                      cryptoCurrency: 'ETH',
-                      fiatCurrency: 'GBP',
-                      network: 'ethereum',
-                      paymentMethod: 'gbp_bank_transfer',
+                      cryptoCurrency: sc.network!.name!,
+                      fiatCurrency: spm.symbol!,
+                      network: sc.symbol!,
+                      paymentMethod: spo.id!,
                     );
               });
         },

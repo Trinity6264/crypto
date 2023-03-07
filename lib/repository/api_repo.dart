@@ -1,4 +1,4 @@
-import 'dart:developer';
+
 
 import 'package:crypto/app/service_locator.dart';
 import 'package:crypto/model/country_model.dart';
@@ -28,12 +28,12 @@ class ApiRepo {
     return countries;
   }
 
-  Future<List<PaymentMethodModel>> getPaymentMethod() async {
+  Future<List<CurrencyFiatModel>> getCurrencyFiat() async {
     final res = await apiService.getPaymentMethod();
     if (res.statusCode != 200) throw Exception({});
     List<dynamic> data = res.data['response'] as List<dynamic>;
-    List<PaymentMethodModel> methods =
-        data.map((e) => PaymentMethodModel.fromJson(e)).toList();
+    List<CurrencyFiatModel> methods =
+        data.map((e) => CurrencyFiatModel.fromJson(e)).toList();
     return methods;
   }
 

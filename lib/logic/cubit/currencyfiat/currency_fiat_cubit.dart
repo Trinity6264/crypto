@@ -3,42 +3,43 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:bloc/bloc.dart';
-import 'package:crypto/logic/cubit/selected_payment/selected_paymethod_cubit.dart';
-import 'package:crypto/model/payment_method_model.dart';
+import 'package:crypto/logic/cubit/selected_payment/selected_currency_fiat_cubit.dart';
 import 'package:crypto/repository/api_repo.dart';
 import 'package:equatable/equatable.dart';
 
-part 'paymentmethod_state.dart';
+import '../../../model/payment_method_model.dart';
 
-class PaymentMethodCubit extends Cubit<PaymentMethodState> {
+part 'currency_fiat_state.dart';
+
+class CurrencyFiatCubit extends Cubit<CurrencyFiatState> {
   final ApiRepo apiRepo;
-  PaymentMethodCubit({required this.apiRepo}) : super(PaymentMethodInitial());
+  CurrencyFiatCubit({required this.apiRepo}) : super(CurrencyFiatInitial());
 
-  Future<void> getPaymentMethod() async {
+  Future<void> getCurrencyFiat() async {
     try {
-      emit(PaymentMethodLoading());
-      final res = await apiRepo.getPaymentMethod();
+      emit(CurrencyFiatLoading());
+      final res = await apiRepo.getCurrencyFiat();
       if (res.isNotEmpty) {
-        SelectedPayMethodCubit().setSelectedPaymentMethod(paymentMethodModel: res[0]);
-        emit(PaymentMethodSuccess(data: res));
+        SelectedCurrencyFiatCubit().setSelectedCurrencyFiat(currencyFiatModel: res[0]);
+        emit(CurrencyFiatSuccess(data: res));
         return;
       }
     } on SocketException catch (_) {
-      emit(const PaymentMethodFailure(
+      emit(const CurrencyFiatFailure(
           errorMessage: 'Connection error,check your internet connection '));
     } on TimeoutException catch (_) {
-      emit(const PaymentMethodFailure(
+      emit(const CurrencyFiatFailure(
           errorMessage: 'Timeout,check your internet connection '));
     } on HandshakeException catch (e) {
       log(e.toString());
       emit(
-        const PaymentMethodFailure(
+        const CurrencyFiatFailure(
             errorMessage: 'Something happened, Sorry try again 🥳'),
       );
     } catch (e) {
       log(e.runtimeType.toString());
       emit(
-        const PaymentMethodFailure(
+        const CurrencyFiatFailure(
             errorMessage: 'Something happened, Sorry try again 🥳'),
       );
     }

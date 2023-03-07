@@ -1,4 +1,4 @@
-class PaymentMethodModel {
+class CurrencyFiatModel {
   String? symbol;
   List<dynamic>? supportingCountries;
   String? logoSymbol;
@@ -10,7 +10,7 @@ class PaymentMethodModel {
   String? icon;
   bool? isPayOutAllowed;
 
-  PaymentMethodModel(
+  CurrencyFiatModel(
       {this.symbol,
       this.supportingCountries,
       this.logoSymbol,
@@ -22,7 +22,7 @@ class PaymentMethodModel {
       this.icon,
       this.isPayOutAllowed});
 
-  PaymentMethodModel.fromJson(Map<String, dynamic> json) {
+  CurrencyFiatModel.fromJson(Map<String, dynamic> json) {
     symbol = json['symbol'];
     supportingCountries = json['supportingCountries'];
     logoSymbol = json['logoSymbol'];
@@ -40,23 +40,6 @@ class PaymentMethodModel {
     isPayOutAllowed = json['isPayOutAllowed'];
   }
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['symbol'] = symbol;
-    data['supportingCountries'] = supportingCountries;
-    data['logoSymbol'] = logoSymbol;
-    data['name'] = name;
-    data['isPopular'] = isPopular;
-    data['isAllowed'] = isAllowed;
-    if (paymentOptions != null) {
-      data['paymentOptions'] =
-          paymentOptions!.map((v) => v.toJson()).toList();
-    }
-    data['roundOff'] = roundOff;
-    data['icon'] = icon;
-    data['isPayOutAllowed'] = isPayOutAllowed;
-    return data;
-  }
 }
 
 class PaymentOptions {
@@ -129,29 +112,5 @@ class PaymentOptions {
     isNonCustodial = json['isNonCustodial'];
   }
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['name'] = name;
-    data['id'] = id;
-    data['displayText'] = displayText;
-    data['processingTime'] = processingTime;
-    data['icon'] = icon;
-    data['dailyLimit'] = dailyLimit;
-    data['limitCurrency'] = limitCurrency;
-    data['maxAmount'] = maxAmount;
-    data['minAmount'] = minAmount;
-    data['isActive'] = isActive;
-    data['isPayOutAllowed'] = isPayOutAllowed;
-    data['minAmountForPayOut'] = minAmountForPayOut;
-    data['maxAmountForPayOut'] = maxAmountForPayOut;
-    data['defaultAmountForPayOut'] = defaultAmountForPayOut;
-    data['defaultAmount'] = defaultAmount;
-    data['isConverted'] = isConverted;
-    data['provider'] = provider;
-    data['isBillingAddressRequired'] = isBillingAddressRequired;
-    data['supportedCountryCode'] = supportedCountryCode;
-    data['isNftAllowed'] = isNftAllowed;
-    data['isNonCustodial'] = isNonCustodial;
-    return data;
-  }
+  
 }

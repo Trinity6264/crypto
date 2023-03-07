@@ -1,9 +1,7 @@
-import 'dart:developer';
-
 import 'package:crypto/helper/color_pallet.dart';
-import 'package:crypto/logic/cubit/country/country_cubit.dart';
-import 'package:crypto/logic/cubit/paymentmethod/paymentmethod_cubit.dart';
-import 'package:crypto/logic/cubit/selected_payment/selected_paymethod_cubit.dart';
+import 'package:crypto/logic/cubit/currencyfiat/currency_fiat_cubit.dart';
+import 'package:crypto/logic/cubit/selected_payment/selected_currency_fiat_cubit.dart';
+
 import 'package:crypto/widgets/card_wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -14,14 +12,14 @@ class CustomDropDown extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<PaymentMethodCubit, PaymentMethodState>(
+    return BlocBuilder<CurrencyFiatCubit, CurrencyFiatState>(
       builder: (context, state) {
-        if (state is PaymentMethodLoading) {
+        if (state is CurrencyFiatLoading) {
           return const CardWrapper(
             child: SizedBox(),
           );
         }
-        if (state is PaymentMethodFailure) {
+        if (state is CurrencyFiatFailure) {
           return CardWrapper(
             child: Text(
               state.errorMessage,
@@ -31,16 +29,16 @@ class CustomDropDown extends StatelessWidget {
             ),
           );
         }
-        if (state is PaymentMethodSuccess) {
+        if (state is CurrencyFiatSuccess) {
           context
-              .read<SelectedPayMethodCubit>()
-              .setSelectedPaymentMethod(paymentMethodModel: state.data[0]);
+              .read<SelectedCurrencyFiatCubit>()
+              .setSelectedCurrencyFiat(currencyFiatModel: state.data[0]);
           return DropdownButtonFormField(
             iconEnabledColor: ColorPallet.whiteColor,
             isExpanded: true,
             onChanged: (value) {
-              context.read<SelectedPayMethodCubit>().setSelectedPaymentMethod(
-                    paymentMethodModel: value!,
+              context.read<SelectedCurrencyFiatCubit>().setSelectedCurrencyFiat(
+                    currencyFiatModel: value!,
                   );
             },
             decoration: const InputDecoration(
@@ -51,10 +49,10 @@ class CustomDropDown extends StatelessWidget {
                 .map(
                   (e) => DropdownMenuItem(
                     value: e,
-                    child: BlocBuilder<SelectedPayMethodCubit,
-                        SelectedPayMethodState>(
+                    child: BlocBuilder<SelectedCurrencyFiatCubit,
+                        SelectedCurrencyFiatState>(
                       builder: (context, state) {
-                        if (state is SelectedPayMethodSelected) {
+                        if (state is SelectedCurrencyFiatSelected) {
                           return SizedBox(
                             height: 20,
                             width: 20,

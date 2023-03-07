@@ -1,6 +1,6 @@
 import 'package:crypto/app/service_locator.dart';
 import 'package:crypto/helper/color_pallet.dart';
-import 'package:crypto/logic/cubit/selected_payment/selected_paymethod_cubit.dart';
+import 'package:crypto/logic/cubit/selected_payment/selected_currency_fiat_cubit.dart';
 import 'package:crypto/logic/cubit/selected_payment_option/selected_payment_option_cubit.dart';
 import 'package:crypto/service/nav_service.dart';
 import 'package:flutter/material.dart';
@@ -48,17 +48,17 @@ class PaymentMethod extends StatelessWidget {
             ),
           ),
           SizedBox(height: size.height * .04),
-          BlocBuilder<SelectedPayMethodCubit, SelectedPayMethodState>(
+          BlocBuilder<SelectedCurrencyFiatCubit, SelectedCurrencyFiatState>(
             builder: (context, state) {
-              if (state is SelectedPayMethodSelected) {
+              if (state is SelectedCurrencyFiatSelected) {
                 return Expanded(
                   child: ListView.separated(
-                    itemCount: state.paymentMethodModel.paymentOptions!.length,
+                    itemCount: state.currencyFiatModel.paymentOptions!.length,
                     separatorBuilder: (context, index) =>
                         const SizedBox(height: 20),
                     itemBuilder: (context, index) {
                       final paymentOption =
-                          state.paymentMethodModel.paymentOptions![index];
+                          state.currencyFiatModel.paymentOptions![index];
                       return GestureDetector(
                         onTap: () {
                           context
@@ -85,7 +85,7 @@ class PaymentMethod extends StatelessWidget {
                                   borderRadius: BorderRadius.circular(5),
                                 ),
                                 child: SvgPicture.string(
-                                  state.paymentMethodModel.icon!,
+                                  state.currencyFiatModel.icon!,
                                   semanticsLabel: 'Logo',
                                   placeholderBuilder: (context) => const Center(
                                       child: CircularProgressIndicator()),
@@ -107,7 +107,7 @@ class PaymentMethod extends StatelessWidget {
                                   scrollDirection: Axis.horizontal,
                                   child: Row(
                                     children: state
-                                        .paymentMethodModel.paymentOptions!
+                                        .currencyFiatModel.paymentOptions!
                                         .map(
                                           (e) => Container(
                                             width: size.width * .1,
