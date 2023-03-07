@@ -1,4 +1,5 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:crypto/logic/bloc/internet/internet_bloc.dart';
 import 'package:crypto/logic/cubit/currencyfiat/currency_fiat_cubit.dart';
 import 'package:crypto/logic/cubit/keypad/keypad_cubit.dart';
 import 'package:crypto/logic/cubit/price/price_cubit.dart';
@@ -51,6 +52,7 @@ class MyApp extends StatelessWidget {
         BlocProvider<PriceCubit>(
           create: (context) => PriceCubit(apiRepo: apiRepo),
         ),
+           BlocProvider<InternetBloc>(create: (context) => InternetBloc()),
       ],
       child: MaterialApp(
         title: 'crypto',

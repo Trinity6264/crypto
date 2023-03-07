@@ -67,25 +67,30 @@ class NavigationServices {
     );
   }
 
-  FutureOr<dynamic> noInternet(String message) {
-    scaffoldKey.currentState!.showMaterialBanner(
-      MaterialBanner(
-        content: Text(
-          message,
-          style: const TextStyle(
-            color: ColorPallet.whiteColor,
-            fontWeight: FontWeight.w600,
-          ),
+// no internet connection banner
+void showInternetBanner(BuildContext _, String mes) {
+  ScaffoldMessenger.of(_).showMaterialBanner(
+    MaterialBanner(
+      backgroundColor: Colors.red,
+      content: Text(
+        mes,
+        style: const TextStyle(
+          color: Colors.white,
         ),
-        backgroundColor: ColorPallet.primaryColor,
-        overflowAlignment: OverflowBarAlignment.start,
-        elevation: 5.0,
-        leading:
-            const Icon(Icons.wifi_off_rounded, color: ColorPallet.whiteColor),
-        actions: const [
-          SizedBox(),
-        ],
       ),
-    );
-  }
+      actions: const [
+        Icon(
+          Icons.wifi_off,
+          color: Colors.white,
+        )
+      ],
+    ),
+  );
+}
+
+// no internet connection banner close
+void closeInternetBanner(BuildContext _) {
+  ScaffoldMessenger.of(_).clearMaterialBanners();
+}
+
 }
