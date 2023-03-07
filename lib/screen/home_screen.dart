@@ -152,22 +152,62 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: BlocBuilder<KeypadCubit, KeypadState>(
                           builder: (context, state) {
                             if (state is KeypadTyping) {
-                              return Text(
-                                '\$${state.input}',
-                                style: TextStyle(
-                                  color: ColorPallet.textColor,
-                                  fontSize: size.width * .15,
-                                  fontWeight: FontWeight.w700,
-                                ),
+                              return Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  BlocBuilder<SelectedPayMethodCubit,
+                                      SelectedPayMethodState>(
+                                    builder: (context, state) {
+                                      if (state is SelectedPayMethodSelected) {
+                                        return Text(
+                                          '${state.paymentMethodModel.symbol!} ',
+                                          style: TextStyle(
+                                            color: ColorPallet.textColor,
+                                            fontSize: size.width * .1,
+                                          ),
+                                        );
+                                      }
+                                      return const SizedBox();
+                                    },
+                                  ),
+                                  Text(
+                                    state.input,
+                                    style: TextStyle(
+                                      color: ColorPallet.textColor,
+                                      fontSize: size.width * .12,
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                  ),
+                                ],
                               );
                             }
-                            return Text(
-                              '\$0',
-                              style: TextStyle(
-                                color: ColorPallet.textColor,
-                                fontSize: size.width * .15,
-                                fontWeight: FontWeight.w700,
-                              ),
+                            return Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                BlocBuilder<SelectedPayMethodCubit,
+                                    SelectedPayMethodState>(
+                                  builder: (context, state) {
+                                    if (state is SelectedPayMethodSelected) {
+                                      return Text(
+                                        '${state.paymentMethodModel.symbol} ',
+                                        style: TextStyle(
+                                          color: ColorPallet.textColor,
+                                          fontSize: size.width * .1,
+                                        ),
+                                      );
+                                    }
+                                    return const SizedBox();
+                                  },
+                                ),
+                                Text(
+                                  '0',
+                                  style: TextStyle(
+                                    color: ColorPallet.textColor,
+                                    fontSize: size.width * .12,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                              ],
                             );
                           },
                         ),
