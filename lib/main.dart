@@ -1,5 +1,4 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'package:crypto/logic/cubit/country/country_cubit.dart';
 import 'package:crypto/logic/cubit/currencyfiat/currency_fiat_cubit.dart';
 import 'package:crypto/logic/cubit/keypad/keypad_cubit.dart';
 import 'package:crypto/logic/cubit/price/price_cubit.dart';
@@ -35,14 +34,8 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider<CurrencyCubit>(
-          create: (context) => CurrencyCubit(apiRepo: apiRepo),
-        ),
-        BlocProvider<CountryCubit>(
-          create: (context) => CountryCubit(apiRepo: apiRepo),
-        ),
-        BlocProvider<KeypadCubit>(
-          create: (context) => KeypadCubit(),
-        ),
+            create: (context) => CurrencyCubit(apiRepo: apiRepo)),
+        BlocProvider<KeypadCubit>(create: (context) => KeypadCubit()),
         BlocProvider<CurrencyFiatCubit>(
           create: (context) => CurrencyFiatCubit(apiRepo: apiRepo),
         ),

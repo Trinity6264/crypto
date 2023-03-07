@@ -20,8 +20,10 @@ class CurrencyFiatCubit extends Cubit<CurrencyFiatState> {
       emit(CurrencyFiatLoading());
       final res = await apiRepo.getCurrencyFiat();
       if (res.isNotEmpty) {
-        SelectedCurrencyFiatCubit().setSelectedCurrencyFiat(currencyFiatModel: res[0]);
         emit(CurrencyFiatSuccess(data: res));
+        return;
+      } else {
+        emit(const CurrencyFiatSuccess(data: []));
         return;
       }
     } on SocketException catch (_) {
@@ -33,8 +35,9 @@ class CurrencyFiatCubit extends Cubit<CurrencyFiatState> {
     } on HandshakeException catch (e) {
       log(e.toString());
       emit(
-        const CurrencyFiatFailure(
-            errorMessage: 'Something happened, Sorry try again 🥳'),
+        CurrencyFiatFailure(
+          errorMessage: e.message,
+        ),
       );
     } catch (e) {
       log(e.runtimeType.toString());

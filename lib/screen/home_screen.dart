@@ -30,11 +30,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  // Future<void> getCountries() async {
-  //   final apiService = context.read<CountryCubit>();
-  //   await apiService.getCryptoCountry();
-  // }
-
   Future<void> getCrypto() async {
     await context.read<CurrencyCubit>().getCryptoCurrency();
   }
@@ -158,7 +153,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                   BlocBuilder<SelectedCurrencyFiatCubit,
                                       SelectedCurrencyFiatState>(
                                     builder: (context, state) {
-                                      if (state is SelectedCurrencyFiatSelected) {
+                                      if (state
+                                          is SelectedCurrencyFiatSelected) {
                                         return Text(
                                           '${state.currencyFiatModel.symbol!} ',
                                           style: TextStyle(
@@ -366,14 +362,14 @@ class GetQuoteButton extends StatelessWidget {
                 final spo =
                     context.read<SelectedPaymentOptionCubit>().paymentOptions;
                 final sc = context.read<SelectedCurrencyCubit>().currency;
-                final spm =
+                final scf =
                     context.read<SelectedCurrencyFiatCubit>().currencyFiat;
                 final userInput = context.read<KeypadCubit>().userInputs;
 
                 if (spo == null) {
                   _navService.showBanner('Payment options must be selected');
                   return;
-                } else if (spm == null) {
+                } else if (scf == null) {
                   _navService.showBanner('Select a payment method');
                   return;
                 } else if (sc == null) {
@@ -383,15 +379,11 @@ class GetQuoteButton extends StatelessWidget {
                   _navService.showBanner('Enter amount needed');
                   return;
                 }
-                log(userInput +
-                    spm.symbol.toString() +
-                    sc.symbol.toString() +
-                    spo.id.toString());
                 await context.read<PriceCubit>().getPriceDetails(
                       amount: userInput,
-                      cryptoCurrency: sc.network!.name!,
-                      fiatCurrency: spm.symbol!,
-                      network: sc.symbol!,
+                      cryptoCurrency: sc.symbol!,
+                      fiatCurrency: scf.symbol!,
+                      network: sc.network!.name!,
                       paymentMethod: spo.id!,
                     );
               });
