@@ -68,29 +68,28 @@ class NavigationServices {
   }
 
 // no internet connection banner
-void showInternetBanner(BuildContext _, String mes) {
-  ScaffoldMessenger.of(_).showMaterialBanner(
-    MaterialBanner(
-      backgroundColor: Colors.red,
-      content: Text(
-        mes,
-        style: const TextStyle(
-          color: Colors.white,
+  void showInternetBanner(BuildContext _, String mes) {
+    ScaffoldMessenger.of(_).showMaterialBanner(
+      MaterialBanner(
+        backgroundColor: const Color.fromARGB(255, 146, 57, 50),
+        content: Text(
+          mes,
+          style: const TextStyle(
+            color: Colors.white,
+          ),
         ),
+        actions: const [
+          Icon(
+            Icons.wifi_off,
+            color: Colors.white,
+          )
+        ],
       ),
-      actions: const [
-        Icon(
-          Icons.wifi_off,
-          color: Colors.white,
-        )
-      ],
-    ),
-  );
-}
+    );
+  }
 
 // no internet connection banner close
-void closeInternetBanner(BuildContext _) {
-  ScaffoldMessenger.of(_).clearMaterialBanners();
-}
-
+  void closeInternetBanner(BuildContext _) {
+    ScaffoldMessenger.of(_).clearMaterialBanners();
+  }
 }

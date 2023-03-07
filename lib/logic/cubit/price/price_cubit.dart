@@ -29,9 +29,8 @@ class PriceCubit extends Cubit<PriceState> {
           network: network,
           paymentMethod: paymentMethod);
       emit(PriceSuccess(priceModel: res));
-    } on SocketException catch (_) {
-      emit(const PriceFailure(
-          errorMessage: 'Connection error,check your internet connection '));
+    } on SocketException catch (e) {
+      emit(PriceFailure(errorMessage: e.message));
     } on TimeoutException catch (_) {
       emit(const PriceFailure(
           errorMessage: 'Timeout,check your internet connection '));
